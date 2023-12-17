@@ -8,10 +8,11 @@ urlpatterns = [
     path('register/',views.register,name="register"),
     path('login/',views.UserLoginView.as_view(),name="login"),
     path('logout/',LogoutView.as_view(next_page="homepage"),name="logout"),
-    path('profile/',views.profile,name="profile"),
+    path('profile/',views.ProfileView.as_view(),name="profile"),
     path('profile/edit/',views.edit_profile,name="edit_profile"),
     path('details/<int:id>/',views.DetailCarView.as_view(),name="car_detail"),
     path('edit/<int:id>/',views.EditCarView.as_view(),name="edit_car"),
     path('delete/<int:id>/',views.DeleteCarView.as_view(),name="delete_car"),
+    path('purchase/<int:car_id>/', views.PurchaseView.as_view(), name='purchase')
 
 ]

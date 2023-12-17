@@ -7,6 +7,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate,login,update_session_auth_hash,logout
 from django.views.generic import CreateView,UpdateView,DeleteView,DetailView
 from django.contrib.auth.views import LoginView
+from django.utils.decorators import method_decorator
+from django.views import View
+from django.db import transaction
 
 # Create your views here.
 def car(request):
@@ -81,17 +84,17 @@ class DetailCarView(DetailView):
 
     def post(self,request,*args,**kwargs):
             comment_form = forms.CommentForm(data=self.request.POST)
-            post = self.get_object()
+            car = self.get_object()
             if comment_form.is_valid():
                 new_comment = comment_form.save(commit = False)
-                new_comment.post = post
+                new_comment.car = car
                 new_comment.save()
             return self.get(request,*args,**kwargs)
     
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
-        post = self.object
-        comments = post.comments.all()
+        car = self.object
+        comments = car.comments.all()
         comment_form = forms.CommentForm()
         
         context['comments'] = comments
@@ -132,3 +135,24 @@ class DeleteCarView(DeleteView):
     template_name = 'delete.html'
     success_url = reverse_lazy('profile')
     pk_url_kwarg='id'
+
+class PurchaseView(View):
+    @method_decorator(login_required, name='dispatch')
+    def post(self, request, car_id):
+        car = models.Car.objects.get(pk=car_id)
+        if car.quantity > 0:
+            with transaction.atomic():
+                car.quantity -= 1
+                car.save()
+                purchase = models.Purchase(user=request.user, car=car)
+                purchase.save()
+            return render(request, 'purchase_success.html', {'car': car})
+        else:
+            return render(request, 'purchase_failure.html', {'car': car})
+        
+class ProfileView(View):
+    @method_decorator(login_required, name='dispatch')
+    def get(self, request):
+        user = request.user
+        purchases = models.Purchase.objects.filter(user=user)
+        return render(request, 'profile.html', {'user': user, 'purchases': purchases})

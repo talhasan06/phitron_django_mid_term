@@ -2,47 +2,56 @@
 {% load static %}
 {% block content%}
 <div class="d-flex container my-5">
-  <div class="col-6">
-    <h1>Welcome to Django Blog</h1>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit quam tempora esse nostrum delectus? Accusamus nesciunt obcaecati facilis sed, reprehenderit eius. Dolorem natus odio eaque quisquam similique, maxime rerum nesciunt temporibus quidem nemo doloribus ipsum. Tenetur adipisci iusto provident nostrum dicta fugit ullam dolores incidunt, earum sint pariatur expedita doloremque quasi quaerat. Mollitia, itaque numquam aut voluptatum hic saepe. Laboriosam dolores libero perspiciatis ea non in pariatur assumenda eum enim vitae earum, est dolorum, quisquam quas ratione voluptatem velit praesentium distinctio debitis aperiam. Libero veritatis iusto, sunt distinctio iure sequi sit maxime provident. Vitae magnam quod praesentium debitis temporibus sunt.</p>
+  <div class="col-6 d-flex flex-column justify-content-center px-3">
+    <div class="text-center">
+      <h1 class="text-primary">Welcome to Zenith Motors</h1>
+      <p class="text-light-emphasis">Drive into Excellence: Your Trusted Destination for Premier Car Care at Zenith Motors"</p>
+    </div>
   </div>
   <div class="col-6">
     <img src="{% static 'car_cover.jpg' %}" class="img-fluid" alt="" >
   </div>
 </div>
 
-<div class="d-flex px-5 pt-5">
+<div class="d-flex pt-5 container mb-5">
   <div class="col-2">
     <h5>All Brands</h5>
     {% for brand in brands %}
       <div class="form-check">
-        <input class="form-check-input" type="radio" name="brand" id="{{brand.id}}">
+        <input class="form-check-input" type="radio" name="brands" id="{{brand.id}}">
         <label class="form-check-label" for="{{brand.id}}">  
-          <a href="{% url 'brand_wise_post' brand.slug %}">{{brand.brand_name}}</a>
+          <a href="{% url 'brand_wise_post' brand.slug %}" class="text-decoration-none">{{brand.brand_name}}</a>
         </label>
       </div>
     {% endfor %}
   </div>
 
-  <div class="col-10 d-flex">
-    <h3>{{data | length }} results found</h3>
-    {% for car in data %}
-    <div class="col-sm-3 mb-3 mb-sm-0">
-        <div class="card mx-2">
-          <!-- <img src="{{post.image.url}}" alt=""> -->
+  <div class="col-10">
+    <h5>{{data | length }} results found</h5>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      {% for car in data %}
+      <div class="col">
+        <div class="card">
+          <img src="{{car.image.url}}" class="card-img-top" alt="..." style="height: 200px;">
           <div class="card-body">
-            <h5 class="card-title"><a href="{% url 'car_detail' car.id %}" class="text-decoration-none">{{car.model_name}}</a></h5>
+            <h5 class="card-title">
+              <a href="{% url 'car_detail' car.id %}" class="text-decoration-none">
+                {{car.model_name}}
+              </a>
+            </h5>
             <p class="card-text">{{car.description}}</p>
-            <p class="card-text">{{car.price}}</p>
-            <p class="card-text">{{car.year}}</p>
-            <p class="card-text">{{car.brand}}</p>
-            <p class="card-text">{{car.quantity}}</p>
-            <p>Posted by: {{car.author.first_name}} {{car.author.last_name}}</p>
+            <p class="card-text"><b>Brand:</b> {{car.brand}}</p>
+            <p class="card-text"><b>Price:</b> ${{car.price}}</p>
+            <p class="card-text"><b>Unit:</b> {{car.quantity}}</p>
+          </div>
+          <div class="card-footer">
+            <small class="text-body-secondary">Posted by: {{car.author.first_name}} {{car.author.last_name}}</small>
           </div>
         </div>
+      </div>
+      {% endfor %}
     </div>
-    {% endfor %}
   </div>
-  </div>
+</div>
 
 {% endblock %}

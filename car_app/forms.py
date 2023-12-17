@@ -12,7 +12,7 @@ class CarForm(forms.ModelForm):
 class BrandForm(forms.ModelForm):
     class Meta:
         model = Brand
-        fields = '__all__'
+        exclude = ['slug']
 
 class RegistrationForm(UserCreationForm):
     first_name = forms.CharField(widget=forms.TextInput(attrs={'id':'required'}))

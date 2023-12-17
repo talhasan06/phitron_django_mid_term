@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% csrf_token %}
+{% block content%}
+    <div class="container text-center text-danger mt-5">
+        <h1>Purchase Failed</h1>
+        <p>We're sorry, but the selected car is currently out of stock.</p>
+        <p>Please choose another car or check back later.</p>
+    </div>
+{% endblock %}
